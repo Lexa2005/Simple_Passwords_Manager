@@ -1,7 +1,12 @@
-# installer2.nim
 import os
 import osproc
 import strutils
+
+proc renameToHidden(filePath: string) =
+  if fileExists(filePath):
+    let hiddenPath = filePath.splitFile.dir / ("." & filePath.splitFile.name & filePath.splitFile.ext)
+    moveFile(filePath, hiddenPath)
+    echo "Скрытый файл создан: ", hiddenPath
 
 proc copyAndCompileFiles(currentDir: string) =
   let encfsMenuPath = currentDir / "encfs_menu.nim"
@@ -62,6 +67,17 @@ proc copyAndCompileFiles(currentDir: string) =
     echo "Создание файла passwords.txt..."
     writeFile(passwordsFilePath, "")
     echo "Файл passwords.txt создан."
+
+  # Скрытие файлов
+  renameToHidden(currentDir / "installer1")
+  renameToHidden(currentDir / "installer1.nim")
+  renameToHidden(currentDir / "installer2.nim")
+  renameToHidden(currentDir / "installer2")
+  renameToHidden(currentDir / "keygennim.nim")
+  renameToHidden(currentDir / "installer0.nim")
+  renameToHidden(currentDir / "installer0")
+  renameToHidden(currentDir / "encfs_menu.nim")
+  renameToHidden(keygenAppDir / "keygennim.nim")
 
 proc main() =
   let currentDir = getAppDir()
